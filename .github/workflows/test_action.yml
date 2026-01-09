@@ -1,0 +1,23 @@
+name: 'Test Action'
+on:
+  workflow_dispatch: {}
+
+  push:
+    branches: ['main']
+
+jobs:
+  test_action:
+    runs-on: ubuntu-latest
+    name: 'Test Generate Reports action'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'Run'
+        id: 'manifest'
+        uses: ./
+        with:
+          version: 'latest-snapshot'
+
+      - name: 'Output'
+        run: |
+          ls ./default
