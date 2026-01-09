@@ -54,6 +54,9 @@ if [ -z "$selected_version_object" ]; then
   esac
 fi
 
+
+package_url=$(echo "$selected_version_object" | jq -r '.url')
+
 package_url_response=$(curl -fsSL "$package_url") || {
   echo "::error::Fetch Failed: Could not fetch package JSON"
   exit 1
