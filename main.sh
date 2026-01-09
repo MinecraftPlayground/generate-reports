@@ -72,10 +72,10 @@ TEMP_DOWNLOAD_DIR=$(mktemp -d)
 echo "Downloading server.jar from \"$server_download_url\"."
 curl -L -o $TEMP_DOWNLOAD_DIR/client.jar $server_download_url
 
-echo "Verifying SHA1 hash of client.jar."
-downloaded_sha1=$(sha1sum "$TEMP_DOWNLOAD_DIR/client.jar" | awk '{print $1}')
+echo "Verifying SHA1 hash of server.jar."
+downloaded_sha1=$(sha1sum "$TEMP_DOWNLOAD_DIR/server.jar" | awk '{print $1}')
 
-if [ "$downloaded_sha1" != "$client_jar_sha1" ]; then
+if [ "$downloaded_sha1" != "$server_jar_sha1" ]; then
   echo "::error::SHA1 hash does not match. Expected $server_jar_sha1, but got $downloaded_sha1."
   exit 1
 else
