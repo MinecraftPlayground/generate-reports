@@ -1,5 +1,7 @@
 # Generate Reports
 
+GitHub Action that generates Minecraft default reports.
+
 [![Test Action](https://github.com/MinecraftPlayground/generate-reports/actions/workflows/test_action.yml/badge.svg)](https://github.com/MinecraftPlayground/generate-reports/actions/workflows/test_action.yml)
 
 ## Usage
