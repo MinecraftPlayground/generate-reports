@@ -83,5 +83,12 @@ fi
 
 echo "Saved \"server.jar\" to \"$TEMP_DOWNLOAD_DIR\"."
 
+pushd $TEMP_DOWNLOAD_DIR
+echo "::group:: Generate reports from server.jar"
+java -DbundlerMainClass=net.minecraft.data.Main -jar server.jar --reports
+echo "::endgroup::"
+popd
+
+cp -r "$TEMP_DOWNLOAD_DIR/generated/reports/." $INPUT_PATH
 
 exit 0
