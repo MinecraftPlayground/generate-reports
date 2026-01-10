@@ -70,7 +70,7 @@ echo "Make temp download directory."
 TEMP_DOWNLOAD_DIR=$(mktemp -d)
 
 echo "Downloading server.jar from \"$server_download_url\"."
-curl -L -o $TEMP_DOWNLOAD_DIR/server.jar $server_download_url
+curl -fsSL -o $TEMP_DOWNLOAD_DIR/server.jar $server_download_url
 
 echo "Verifying SHA1 hash of server.jar."
 downloaded_sha1=$(sha1sum "$TEMP_DOWNLOAD_DIR/server.jar" | awk '{print $1}')
@@ -82,7 +82,7 @@ else
   echo "SHA1 hash verification passed for server.jar."
 fi
 
-echo "Saved \"server.jar\" to \"$TEMP_DOWNLOAD_DIR\"."
+echo "Saved \"server.jar\" to \"$TEMP_DOWNLOAD_DIR/server.jar\"."
 
 pushd $TEMP_DOWNLOAD_DIR
 echo "::group:: Generate reports from server.jar"
