@@ -27,6 +27,8 @@ elif [ "$INPUT_VERSION" = "latest-snapshot" ]; then
 else
   selected_index=$(echo "$versions" | jq "index(\"$selected_version\")")
   v113_index=$(echo "$versions" | jq "index(\"1.13\")")
+
+  echo "$selected_index < $v113_index"
   
   if [ "$selected_index" != "null" ] && [ "$v113_index" != "null" ]; then
     if [ "$selected_index" -lt "$v113_index" ]; then
