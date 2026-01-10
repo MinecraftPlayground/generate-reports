@@ -15,7 +15,7 @@ jobs:
       - name: 'Run invalid'
         uses: ./
         with:
-          version: '18w47a'
+          version: '1.13-pre10'
 
       - name: 'Run'
         uses: ./
