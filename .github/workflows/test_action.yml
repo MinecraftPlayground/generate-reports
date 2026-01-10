@@ -12,6 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: 'Run invalid'
+        uses: ./
+        with:
+          version: '18w47a'
+
       - name: 'Run'
         uses: ./
         with:
