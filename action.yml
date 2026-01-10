@@ -19,6 +19,11 @@ inputs:
     required: false
     default: 'latest-release'
 
+  path:
+    description: 'Relative path under $GITHUB_WORKSPACE to place the reports.'
+    required: false
+    default: './default'
+
   manifest-url:
     description: 'URL to the manifest API.'
     required: false
@@ -40,5 +45,6 @@ runs:
   image: 'Dockerfile'
   env:
     INPUT_VERSION: ${{ inputs.version }}
+    INPUT_PATH: ${{ inputs.path }}
     INPUT_MANIFEST_URL: ${{ inputs.manifest-url }}
     INPUT_IF_VERSION_IS_INVALID: ${{ inputs.if-version-is-invalid }}
