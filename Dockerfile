@@ -1,4 +1,8 @@
-FROM cdue/curl-zip-jq:latest
+FROM eclipse-temurin:26-jre
+
+RUN apt-get update \
+  && apt-get install -y curl jq zip \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src
 
