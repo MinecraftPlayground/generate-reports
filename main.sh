@@ -16,6 +16,9 @@ latest_release_version=$(echo "$manifest_response" | jq -r '.latest.release')
 latest_snapshot_version=$(echo "$manifest_response" | jq -r '.latest.snapshot')
 versions=$(echo "$manifest_response" | jq -c '[.versions[].id] | reverse')
 
+v1_13_index=$(echo "$versions" | jq "index(\"1.13\")")
+v1_18_index=$(echo "$versions" | jq "index(\"1.18\")")
+
 selected_version=$INPUT_VERSION
 
 if [ "$INPUT_VERSION" = "latest-release" ] || [ -z "$INPUT_VERSION" ]; then
@@ -25,19 +28,17 @@ elif [ "$INPUT_VERSION" = "latest-snapshot" ]; then
   echo "Using latest snapshot version: $latest_snapshot_version"
   selected_version="$latest_snapshot_version"
 else
-  selected_index=$(echo "$versions" | jq "index(\"$selected_version\")")
-  v113_index=$(echo "$versions" | jq "index(\"1.13\")")
-
-  echo "$selected_index < $v113_index"
-  
-  if [ "$selected_index" != "null" ] && [ "$v113_index" != "null" ]; then
-    if [ "$selected_index" -lt "$v113_index" ]; then
-      echo "::warning::Version \"$selected_version\" is older than \"1.13\". Skipping generation."
-      exit 0
-    fi
-  fi
-  
   echo "Using specified version: $INPUT_VERSION"
+fi
+
+# Check if version is < 1.13, if so skip generation
+selected_index=$(echo "$versions" | jq "index(\"$selected_version\")")
+
+if [ "$selected_index" != "null" ] && [ "$v113_index" != "null" ]; then
+  if [ "$selected_index" -lt "$v1_13_index" ]; then
+    echo "::warning::Version \"$selected_version\" is older than \"1.13\". Skipping generation."
+    exit 0
+  fi
 fi
 
 selected_version_object=$(echo "$manifest_response" | jq -c ".versions[] | select(.id==\"$selected_version\")")
@@ -96,7 +97,11 @@ echo "Saved \"server.jar\" to \"$TEMP_DOWNLOAD_DIR/server.jar\"."
 
 cd $TEMP_DOWNLOAD_DIR
 echo "::group:: Generate reports from server.jar"
-java -DbundlerMainClass=net.minecraft.data.Main -jar server.jar --reports
+if [ "$selected_index" -lt "$v1_18_index" ]; then
+  java -cp server.jar net.minecraft.data.Main --reports
+else
+  java -DbundlerMainClass=net.minecraft.data.Main -jar server.jar --reports
+fi
 echo "::endgroup::"
 cd -
 
