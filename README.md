@@ -15,7 +15,7 @@ jobs:
         id: generate_reports
         uses: MinecraftPlayground/generate-reports@main
         with:
-          version: 1.21.2
+          version: 'latest-snapshot'
           path: './default_reports'
 ```
 
