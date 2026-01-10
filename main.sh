@@ -15,9 +15,6 @@ manifest_response=$(curl -fsSL "$INPUT_MANIFEST_URL") || {
 latest_release_version=$(echo "$manifest_response" | jq -r '.latest.release')
 latest_snapshot_version=$(echo "$manifest_response" | jq -r '.latest.snapshot')
 versions=$(echo "$manifest_response" | jq -c '[.versions[].id] | reverse')
-release_versions=$(echo "$manifest_response" | jq -c '[.versions[] | select(.type=="release") | .id] | reverse')
-snapshot_versions=$(echo "$manifest_response" | jq -c '[.versions[] | select(.type=="snapshot") | .id] | reverse')
-april_fools_versions=$(echo "$manifest_response" | jq -c '[.versions[] | select(.releaseTime | test("-04-01T")) | .id] | reverse')
 
 selected_version=$INPUT_VERSION
 
@@ -28,6 +25,16 @@ elif [ "$INPUT_VERSION" = "latest-snapshot" ]; then
   echo "Using latest snapshot version: $latest_snapshot_version"
   selected_version="$latest_snapshot_version"
 else
+  selected_index=$(echo "$versions" | jq "index(\"$selected_version\")")
+  v113_index=$(echo "$versions" | jq "index(\"1.13\")")
+  
+  if [ "$selected_index" != "null" ] && [ "$v113_index" != "null" ]; then
+    if [ "$selected_index" -lt "$v113_index" ]; then
+      echo "::warning::Version \"$selected_version\" is older than \"1.13\". Skipping generation."
+      exit 0
+    fi
+  fi
+  
   echo "Using specified version: $INPUT_VERSION"
 fi
 
