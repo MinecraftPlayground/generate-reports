@@ -1,4 +1,4 @@
-FROM eclipse-temurin:26-jre
+FROM eclipse-temurin:25-alpine
 
 RUN apt-get update \
   && apt-get install -y curl jq zip \
